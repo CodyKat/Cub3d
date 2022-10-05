@@ -49,19 +49,60 @@ void	init_graphic_resource(void **mlx_ptr, void **win_ptr, t_ray **ray)
 	}
 }
 
-void	cast_single_ray(t_player *player, int index, t_ray_spot *ray_spot)
+void	cast_x(char **map, t_vector2 pos, t_ray *ray)
 {
+	double		xy_ratio;
+	t_vector2	step_pos;
 
+	step_pos = pos;
+	while (1)
+	{
+
+	}
 }
 
-void	ray_cast(t_player *player, t_ray_spot *ray_spot)
+void	cast_y(char **map, t_vector2 pos, t_ray *ray)
+{
+	double		xy_ratio;
+
+	while (1)
+	{
+
+	}
+}
+
+void	cast_algorithm(char **map, t_vector2 pos, t_ray *ray)
+{
+	double		xy_ratio;
+
+	if (fabs(sin(ray->cast_angle)) > fabs(cos(ray->cast_angle))) // Y축에 가까운 상태
+	{
+		xy_ratio = tan(ray->cast_angle);
+	}
+	else // X축에 가까운 상태
+	{
+		xy_ratio = 1 / tan(ray->cast_angle);
+	}
+}
+
+void	cast_single_ray(char **map, t_player *player, int index, t_ray *ray)
+{
+	static const double	radian_30 = PI / 6;
+	static const double	delta_angle = (PI / 6) / SCREEN_WIDTH;
+
+	ray[index].cast_angle = \
+				player->camera_angle + radian_30 * ((index / SCREEN_WIDTH) - 1);
+	cast_algorithm(map, player->vec_pos, &ray[index]);
+}
+
+void	ray_cast(char **map, t_player *player, t_ray *ray)
 {
 	int	index;
 
 	index = 0;
 	while (index < SCREEN_WIDTH)
 	{
-		cast_single_ray(player, index, &ray_spot[index]);
+		cast_single_ray(map, player, index, &ray[index]);
 		/*
 		여기에서 인덱스에 해당하는 각도로 빛을 쏴 마지막 인자의 구조체에 저장함.
 		빛을 맞은 좌표, 카메라평면과의 거리, 어느면에 맞았는지 정보를 저장해줌.
@@ -70,7 +111,7 @@ void	ray_cast(t_player *player, t_ray_spot *ray_spot)
 	}
 }
 
-void	*get_frame_img(t_player *player, t_ray_spot *ray_spot, void *mlx_ptr)
+void	*get_frame_img(t_player *player, t_ray *ray, void *mlx_ptr)
 {
 	void	*frame_img;
 	int		index;
@@ -86,16 +127,16 @@ void	*get_frame_img(t_player *player, t_ray_spot *ray_spot, void *mlx_ptr)
 	return (frame_img);
 }
 
-void	render(t_player *player, t_ray_spot *ray_spot, void *mlx_ptr, void *win_ptr)
+void	render(t_player *player, t_ray *ray, char **map, void *mlx_ptr, void *win_ptr)
 {
 	void	*frame_img;
 
-	ray_cast(player, ray_spot);
+	ray_cast(map, player, ray);
 	/*
 	여기서 현재위치와 바라보는 각도를 기준으로 가로 픽셀수만큼 등분된 ray를 던져서 벽에 맞으면
 	그 정보를 ray_spot배열에 차곡차곡 저장할것임
 	*/
-	frame_img = get_frame_img(player, ray_spot, mlx_ptr);
+	frame_img = get_frame_img(player, ray, mlx_ptr);
 	/*
 	ray_casting으로 얻은 정보로 픽셀을 하나씩 씩고 벽을 기준으로(상하로 시야조정할 수 있게 되면 다르게 해야겠지만)
 	나머지 픽셀에 천장과 바닥의 색을 칠해하는 방식으로 한 프레임의 이미지를 만든다.
@@ -128,6 +169,6 @@ int	main(int argc, char *argv[])
 	};
 	init_player(&player, argc, argv);
 	init_graphic_resource(&mlx_ptr, &win_ptr, &ray);
-	render(&player, ray, mlx_ptr, win_ptr);
+	render(&player, ray, map, mlx_ptr, win_ptr);
 	mlx_loop(mlx_ptr);
 }
