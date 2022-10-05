@@ -23,15 +23,30 @@ enum e_direction
 	WE = 1 << 3
 };
 
-typedef struct s_vector2
+typedef struct s_vectord2
 {
 	double	vec_x;
 	double	vec_y;
-}	t_vector2;
+}	t_vectord2;
+
+typedef struct s_vectori2
+{
+	int	vec_x;
+	int	vec_y;
+}	t_vectori2;
+
+typedef struct s_ray_travel
+{
+	int	cur_x;
+	int	cur_y;
+	int	delta_x;
+	int	delta_y;
+}	t_ray_travel;
+
 
 typedef struct s_ray_spot
 {
-	t_vector2	vec_hit_point;
+	t_vectord2	vec_hit_point;
 	double		distance;
 	int			hit_side;
 }	t_ray_spot;
@@ -44,7 +59,7 @@ typedef struct s_ray
 
 typedef struct s_player
 {
-	t_vector2	vec_pos;
+	t_vectord2	vec_pos;
 	double		camera_angle;
 }	t_player;
 

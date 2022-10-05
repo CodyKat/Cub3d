@@ -49,22 +49,37 @@ void	init_graphic_resource(void **mlx_ptr, void **win_ptr, t_ray **ray)
 	}
 }
 
-void	cast_x(char **map, t_vector2 pos, t_ray *ray, int quadrant)
+void	init_ray_travel(t_ray_travel *to_init, t_ray *ray, int quadrant)
 {
-	double		xy_ratio;
-	t_vector2	step_pos[2];
-
-	xy_ratio = 1 / tan(ray->cast_angle);
-	while (1)
+	if (quadrant == 1)
 	{
-		step_pos[0].vec_x = 
+		to
 	}
 }
 
-void	cast_y(char **map, t_vector2 pos, t_ray *ray, int quadrant)
+void	cast_x(char **map, t_vectord2 pos, t_ray *ray, int quadrant)
+{
+	t_vectord2		step_pos[2];
+	t_ray_travel	ray_travel;
+
+	init_ray_travel(&ray_travel, ray, quadrant);
+	if (quadrant == 1)
+	{
+		to_check_idx.vec_x = (int)ceil(pos.vec_x);
+		to_check_idx.vec_y = (int)ceil(pos.vec_y);
+	}
+	xy_ratio = 1 / tan(ray->cast_angle);
+	while (1)
+	{
+		step_pos[0].vec_x = round(pos.vec_x + (to_check_idx.vec_y - pos.vec_y) / tan(ray->cast_angle)); // 0.5를 더하고 int로 캐스팅해도 되지 않나..
+		step_pos[0].vec_y = floor()
+	}
+}
+
+void	cast_y(char **map, t_vectord2 pos, t_ray *ray, int quadrant)
 {
 	double		xy_ratio;
-	t_vector2	step_pos[2];
+	t_vectord2	step_pos[2];
 
 	xy_ratio = tan(ray->cast_angle);
 	while (1)
@@ -75,9 +90,9 @@ void	cast_y(char **map, t_vector2 pos, t_ray *ray, int quadrant)
 
 /*
 사실 기준이 될 방향(x, y중하나), 그리고 나머지 좌표하나씩 포인터를 두개 들고 다니면 돌 것 같고,
-이미 각도까지 알고 있는 상황에서 
+이미 각도까지 알고 있는 상황에서 인자로 바라보고 있는 사분면을 들고 다니는건 오바인것 같지만 노미네이트..
 */
-void	cast_algorithm(char **map, t_vector2 pos, t_ray *ray)
+void	cast_algorithm(char **map, t_vectord2 pos, t_ray *ray)
 {
 	double	xy_ratio;
 	int		quadrant;
@@ -98,16 +113,7 @@ void	cast_algorithm(char **map, t_vector2 pos, t_ray *ray)
 		cast_y(map, pos, ray, 4);
 	else
 		cast_x(map, pos, ray, 4);
-	if (fabs(sin(ray->cast_angle)) > fabs(cos(ray->cast_angle))) // Y축에 가까운 상태
-	{
-		if (M_PI_4)
-		cast_y(map, pos, ray);
-	}
-	else // X축에 가까운 상태
-	{
-		cast_x(map, pos, ray);
-
-	}
+	// if (fabs(sin(ray->cast_angle)) > fabs(cos(ray->cast_angle))) // Y축에 가까운 상태
 }
 
 void	cast_single_ray(char **map, t_player *player, int index, t_ray *ray)
