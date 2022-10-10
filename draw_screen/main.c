@@ -78,42 +78,7 @@ void	cast_x(char **map, t_vectord2 pos, t_ray *ray, int quadrant)
 
 void	cast_y(char **map, t_vectord2 pos, t_ray *ray, int quadrant)
 {
-	double		xy_ratio;
-	t_vectord2	step_pos[2];
 
-	xy_ratio = tan(ray->cast_angle);
-	while (1)
-	{
-		step_pos[0].vec_x = 
-	}
-}
-
-/*
-사실 기준이 될 방향(x, y중하나), 그리고 나머지 좌표하나씩 포인터를 두개 들고 다니면 돌 것 같고,
-이미 각도까지 알고 있는 상황에서 인자로 바라보고 있는 사분면을 들고 다니는건 오바인것 같지만 노미네이트..
-*/
-void	cast_algorithm(char **map, t_vectord2 pos, t_ray *ray)
-{
-	double	xy_ratio;
-	int		quadrant;
-
-	if (0 <= ray->cast_angle && ray->cast_angle < M_PI_4 / 2)
-		cast_x(map, pos, ray, 1);
-	else if (ray->cast_angle < M_PI_4)
-		cast_y(map, pos, ray, 1);
-	else if (ray->cast_angle < M_PI_4 * (3 / 2))
-		cast_y(map, pos, ray, 2)
-	else if (ray->cast_angle < M_PI_2)
-		cast_x(map, pos, ray, 2);
-	else if (ray->cast_angle < M_PI_2 + M_PI_4 / 2)
-		cast_x(map, pos, ray, 3);
-	else if (ray->cast_angle < M_PI_2 + M_PI_4)
-		cast_y(map, pos, ray, 3);
-	else if (ray->cast_angle < M_PI_2 + M_PI_4 * (3 / 2))
-		cast_y(map, pos, ray, 4);
-	else
-		cast_x(map, pos, ray, 4);
-	// if (fabs(sin(ray->cast_angle)) > fabs(cos(ray->cast_angle))) // Y축에 가까운 상태
 }
 
 void	cast_single_ray(char **map, t_player *player, int index, t_ray *ray)
@@ -123,7 +88,7 @@ void	cast_single_ray(char **map, t_player *player, int index, t_ray *ray)
 
 	ray[index].cast_angle = \
 				player->camera_angle + radian_30 * ((index / SCREEN_WIDTH) - 1);
-	cast_algorithm(map, player->vec_pos, &ray[index]);
+	
 }
 
 void	ray_cast(char **map, t_player *player, t_ray *ray)
